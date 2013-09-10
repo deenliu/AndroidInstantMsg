@@ -1,0 +1,5 @@
+javac -cp mysql-connector-java-5.0.8-bin.jar:gcm-server.jar:json-simple-1.1.1.jar:. Provider.java Command.java Connector.java
+
+java -cp mysql-connector-java-5.0.8-bin.jar:gcm-server.jar:json-simple-1.1.1.jar:. Provider
+
+nohup java -cp mysql-connector-java-5.0.8-bin.jar:gcm-server.jar:json-simple-1.1.1.jar:. Provider > history.txt &
