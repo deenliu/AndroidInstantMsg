@@ -19,7 +19,7 @@ import at.vcity.androidim.types.FriendInfo;
 
 
 public class UnApprovedFriendList extends ListActivity {
-	
+	private final Context context = this;
 	private static final int APPROVE_SELECTED_FRIENDS_ID = 0;
 //	private static final int DISCARD_ID = 1;
 	private String[] friendUsernames;
@@ -75,7 +75,8 @@ public class UnApprovedFriendList extends ListActivity {
 					else {
 						discardedFriendNames = discardedFriendNames.concat(friendUsernames[i]).concat(",");						
 					}					
-				} 
+				}
+				
 				Thread thread = new Thread(){
 					@Override
 					public void run() {
@@ -83,7 +84,7 @@ public class UnApprovedFriendList extends ListActivity {
 							 discardedFriendNames.length() > 0 
 							) 
 						{
-							imService.sendFriendsReqsResponse(approvedFriendNames, discardedFriendNames);
+							imService.sendFriendsReqsResponse(context, approvedFriendNames, discardedFriendNames);
 							
 						}											
 					}

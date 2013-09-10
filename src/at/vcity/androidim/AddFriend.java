@@ -24,7 +24,7 @@ import at.vcity.androidim.services.IMService;
 
 // TODO: Add javadoc
 public class AddFriend extends Activity implements OnClickListener {
-
+	private final Context context = this;
     private static Button mAddFriendButton;
     private static Button mCancelButton;
     private static EditText mFriendUserNameText;
@@ -132,7 +132,7 @@ public class AddFriend extends Activity implements OnClickListener {
                 @Override
                 public void run() {
                     // TODO: Please check if the request is successful and raise a error message if needed.
-                    mImService.addNewFriendRequest(mFriendUserNameText.getText().toString());
+                    mImService.addNewFriendRequest(context, mFriendUserNameText.getText().toString());
                 }
             };
             thread.start();

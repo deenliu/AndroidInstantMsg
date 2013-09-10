@@ -13,14 +13,16 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 import at.vcity.androidim.interfaces.IAppManager;
 import at.vcity.androidim.interfaces.ISocketOperator;
 
 
 public class SocketOperator implements ISocketOperator
 {
-	private static final String AUTHENTICATION_SERVER_ADDRESS = "http://192.168.0.54/android-im/"; //TODO change to your WebAPI Address
+	private static final String AUTHENTICATION_SERVER_ADDRESS = "http://lore.cs.purdue.edu:8089/"; //TODO change to your WebAPI Address
 	
 	private int listeningPort = 0;
 	
@@ -74,7 +76,7 @@ public class SocketOperator implements ISocketOperator
 	}
 	
 	
-	public String sendHttpRequest(String params)
+	public String sendHttpRequest(Context context, String params)
 	{		
 		URL url;
 		String result = new String();
@@ -98,7 +100,8 @@ public class SocketOperator implements ISocketOperator
 			while ((inputLine = in.readLine()) != null) {
 				result = result.concat(inputLine);				
 			}
-			in.close();			
+			in.close();	
+			Toast.makeText(context, "ABC", Toast.LENGTH_LONG).show();
 		} 
 		catch (MalformedURLException e) {
 			e.printStackTrace();

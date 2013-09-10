@@ -21,7 +21,7 @@ import at.vcity.androidim.services.IMService;
 
 
 public class SignUp extends Activity {
-	
+	private final Context context = this;
 	private static final int FILL_ALL_FIELDS = 0;
 	protected static final int TYPE_SAME_PASSWORD_IN_PASSWORD_FIELDS = 1;
 	private static final int SIGN_UP_FAILED = 2;
@@ -102,7 +102,7 @@ public class SignUp extends Activity {
 										String result = new String();
 										@Override
 										public void run() {
-											result = imService.signUpUser(usernameText.getText().toString(), 
+											result = imService.signUpUser(context, usernameText.getText().toString(), 
 													passwordText.getText().toString(), 
 													eMailText.getText().toString());
 		

@@ -33,6 +33,7 @@ import org.xml.sax.SAXException;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Binder;
@@ -205,7 +206,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	}
 
 	
-	public String sendMessage(String  username, String  tousername, String message) throws UnsupportedEncodingException 
+	public String sendMessage(Context context, String  username, String  tousername, String message) throws UnsupportedEncodingException 
 	{			
 		String params = "username="+ URLEncoder.encode(this.username,"UTF-8") +
 						"&password="+ URLEncoder.encode(this.password,"UTF-8") +
@@ -214,24 +215,24 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 						"&action="  + URLEncoder.encode("sendMessage","UTF-8")+
 						"&";		
 		Log.i("PARAMS", params);
-		return socketOperator.sendHttpRequest(params);		
+		return socketOperator.sendHttpRequest(context, params);		
 	}
 
 	
-	private String getFriendList() throws UnsupportedEncodingException 	{		
+	private String getFriendList(Context context) throws UnsupportedEncodingException 	{		
 		// after authentication, server replies with friendList xml
 		
-		 rawFriendList = socketOperator.sendHttpRequest(getAuthenticateUserParams(username, password));
+		 rawFriendList = socketOperator.sendHttpRequest(context, getAuthenticateUserParams(username, password));
 		 if (rawFriendList != null) {
 			 this.parseFriendInfo(rawFriendList);
 		 }
 		 return rawFriendList;
 	}
 	
-	private String getMessageList() throws UnsupportedEncodingException 	{		
+	private String getMessageList(Context context) throws UnsupportedEncodingException 	{		
 		// after authentication, server replies with friendList xml
 		
-		 rawMessageList = socketOperator.sendHttpRequest(getAuthenticateUserParams(username, password));
+		 rawMessageList = socketOperator.sendHttpRequest(context, getAuthenticateUserParams(username, password));
 		 if (rawMessageList != null) {
 			 this.parseMessageInfo(rawMessageList);
 		 }
@@ -246,14 +247,14 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	 * it returns the "0" in string type
 	 * @throws UnsupportedEncodingException 
 	 * */
-	public String authenticateUser(String usernameText, String passwordText) throws UnsupportedEncodingException 
+	public String authenticateUser(final Context context, String usernameText, String passwordText) throws UnsupportedEncodingException 
 	{
 		this.username = usernameText;
 		this.password = passwordText;	
 		
 		this.authenticatedUser = false;
 		
-		String result = this.getFriendList(); //socketOperator.sendHttpRequest(getAuthenticateUserParams(username, password));
+		String result = this.getFriendList(context); //socketOperator.sendHttpRequest(getAuthenticateUserParams(username, password));
 		if (result != null && !result.equals(Login.AUTHENTICATION_FAILED)) 
 		{			
 			// if user is authenticated then return string from server is not equal to AUTHENTICATION_FAILED
@@ -273,8 +274,8 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 						// sending friend list 
 						Intent i = new Intent(FRIEND_LIST_UPDATED);
 						Intent i2 = new Intent(MESSAGE_LIST_UPDATED);
-						String tmp = IMService.this.getFriendList();
-						String tmp2 = IMService.this.getMessageList();
+						String tmp = IMService.this.getFriendList(context);
+						String tmp2 = IMService.this.getMessageList(context);
 						if (tmp != null) {
 							i.putExtra(FriendInfo.FRIEND_LIST, tmp);
 							sendBroadcast(i);	
@@ -365,7 +366,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		this.stopSelf();
 	}
 	
-	public String signUpUser(String usernameText, String passwordText,
+	public String signUpUser(Context context, String usernameText, String passwordText,
 			String emailText) 
 	{
 		String params = "username=" + usernameText +
@@ -374,12 +375,12 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 						"&email=" + emailText+
 						"&";
 		
-		String result = socketOperator.sendHttpRequest(params);		
+		String result = socketOperator.sendHttpRequest(context, params);		
 		
 		return result;
 	}
 
-	public String addNewFriendRequest(String friendUsername) 
+	public String addNewFriendRequest(Context context, String friendUsername) 
 	{
 		String params = "username=" + this.username +
 		"&password=" + this.password +
@@ -387,12 +388,12 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		"&friendUserName=" + friendUsername +
 		"&";
 
-		String result = socketOperator.sendHttpRequest(params);		
+		String result = socketOperator.sendHttpRequest(context, params);		
 		
 		return result;
 	}
 
-	public String sendFriendsReqsResponse(String approvedFriendNames,
+	public String sendFriendsReqsResponse(Context context, String approvedFriendNames,
 			String discardedFriendNames) 
 	{
 		String params = "username=" + this.username +
@@ -402,7 +403,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		"&discardedFriends=" +discardedFriendNames +
 		"&";
 
-		String result = socketOperator.sendHttpRequest(params);		
+		String result = socketOperator.sendHttpRequest(context, params);		
 		
 		return result;
 		

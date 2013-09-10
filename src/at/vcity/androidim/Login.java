@@ -26,7 +26,7 @@ import at.vcity.androidim.services.IMService;
 
 
 public class Login extends Activity {	
-
+	private final Context context = this;
     protected static final int NOT_CONNECTED_TO_SERVICE = 0;
 	protected static final int FILL_BOTH_USERNAME_AND_PASSWORD = 1;
 	public static final String AUTHENTICATION_FAILED = "0";
@@ -115,7 +115,7 @@ public class Login extends Activity {
 						public void run() {
 							String result = null;
 							try {
-								result = imService.authenticateUser(usernameText.getText().toString(), passwordText.getText().toString());
+								result = imService.authenticateUser(context, usernameText.getText().toString(), passwordText.getText().toString());
 							} catch (UnsupportedEncodingException e) {
 								
 								e.printStackTrace();

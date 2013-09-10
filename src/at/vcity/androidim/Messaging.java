@@ -34,7 +34,7 @@ import at.vcity.androidim.types.MessageInfo;
 
 
 public class Messaging extends Activity {
-
+	private final Context context = this;
 	private static final int MESSAGE_CANNOT_BE_SENT = 0;
 	public String username;
 	private EditText messageText;
@@ -129,7 +129,7 @@ public class Messaging extends Activity {
 					Thread thread = new Thread(){					
 						public void run() {
 							try {
-								if (imService.sendMessage(imService.getUsername(), friend.userName, message.toString()) == null)
+								if (imService.sendMessage(context, imService.getUsername(), friend.userName, message.toString()) == null)
 								{
 									
 									handler.post(new Runnable(){	
