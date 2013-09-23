@@ -22,7 +22,7 @@ import at.vcity.androidim.interfaces.ISocketOperator;
 
 public class SocketOperator implements ISocketOperator
 {
-	private static final String AUTHENTICATION_SERVER_ADDRESS = "http://lore.cs.purdue.edu:8089/"; //TODO change to your WebAPI Address
+	private static final String AUTHENTICATION_SERVER_ADDRESS = "lore.cs.purdue.edu"; //TODO change to your WebAPI Address
 	
 	private int listeningPort = 0;
 	
@@ -77,52 +77,35 @@ public class SocketOperator implements ISocketOperator
 	
 	
 	public String sendHttpRequest(Context context, String params)
-	{		
-		URL url;
+	{
 		String result = new String();
-		try 
-		{
-			url = new URL(AUTHENTICATION_SERVER_ADDRESS);
-			HttpURLConnection connection;
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setDoOutput(true);
-			
-			PrintWriter out = new PrintWriter(connection.getOutputStream());
-			
-			out.println(params);
-			out.close();
-
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(
-							connection.getInputStream()));
+		try {
+	        Socket socket = new Socket("lore.cs.purdue.edu", 8089);
+	        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+	        out.println(params);
+	        out.close();
+	        
+	        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String inputLine;
 
 			while ((inputLine = in.readLine()) != null) {
 				result = result.concat(inputLine);				
 			}
-			in.close();	
-			Toast.makeText(context, "ABC", Toast.LENGTH_LONG).show();
-		} 
-		catch (MalformedURLException e) {
-			e.printStackTrace();
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}			
+			in.close();
+	        
+	        socket.close();
+	        
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
 		
 		if (result.length() == 0) {
 			result = HTTP_REQUEST_FAILED;
 		}
 		
 		return result;
-		
 	
 	}
-
-
-
-
-
 
 	public int startListening(int portNo) 
 	{

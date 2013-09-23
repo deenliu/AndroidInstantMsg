@@ -208,12 +208,12 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	
 	public String sendMessage(Context context, String  username, String  tousername, String message) throws UnsupportedEncodingException 
 	{			
-		String params = "username="+ URLEncoder.encode(this.username,"UTF-8") +
-						"&password="+ URLEncoder.encode(this.password,"UTF-8") +
-						"&to=" + URLEncoder.encode(tousername,"UTF-8") +
-						"&message="+ URLEncoder.encode(message,"UTF-8") +
-						"&action="  + URLEncoder.encode("sendMessage","UTF-8")+
-						"&";		
+		String params = "SEND_MSG:;:"+ URLEncoder.encode(this.username,"UTF-8") +
+						":;:"+ URLEncoder.encode(this.password,"UTF-8") +
+						":;:" + URLEncoder.encode(tousername,"UTF-8") +
+						":;:"+ URLEncoder.encode(message,"UTF-8") +
+						":;:"  + URLEncoder.encode("sendMessage","UTF-8")
+						;		
 		Log.i("PARAMS", params);
 		return socketOperator.sendHttpRequest(context, params);		
 	}
@@ -327,11 +327,12 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	
 	private String getAuthenticateUserParams(String usernameText, String passwordText) throws UnsupportedEncodingException 
 	{			
-		String params = "username=" + URLEncoder.encode(usernameText,"UTF-8") +
-						"&password="+ URLEncoder.encode(passwordText,"UTF-8") +
-						"&action="  + URLEncoder.encode("authenticateUser","UTF-8")+
-						"&port="    + URLEncoder.encode(Integer.toString(socketOperator.getListeningPort()),"UTF-8") +
-						"&";		
+		String params = "LOGIN" + 
+						":;:" + URLEncoder.encode(usernameText,"UTF-8") +
+						":;:"+ URLEncoder.encode(passwordText,"UTF-8") +
+						":;:"  + URLEncoder.encode("authenticateUser","UTF-8")+
+						":;:"    + URLEncoder.encode(Integer.toString(socketOperator.getListeningPort()),"UTF-8")
+						;		
 		
 		return params;		
 	}
@@ -369,11 +370,11 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	public String signUpUser(Context context, String usernameText, String passwordText,
 			String emailText) 
 	{
-		String params = "username=" + usernameText +
-						"&password=" + passwordText +
-						"&action=" + "signUpUser"+
-						"&email=" + emailText+
-						"&";
+		String params = "REGISTER:;:" + usernameText +
+						":;:" + passwordText +
+						":;:" + "signUpUser"+
+						":;:" + emailText
+						;
 		
 		String result = socketOperator.sendHttpRequest(context, params);		
 		
@@ -382,11 +383,11 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 
 	public String addNewFriendRequest(Context context, String friendUsername) 
 	{
-		String params = "username=" + this.username +
-		"&password=" + this.password +
-		"&action=" + "addNewFriend" +
-		"&friendUserName=" + friendUsername +
-		"&";
+		String params = "ADD_FRIEND:;:" + this.username +
+		":;:" + this.password +
+		":;:" + "addNewFriend" +
+		":;:" + friendUsername
+		;
 
 		String result = socketOperator.sendHttpRequest(context, params);		
 		
@@ -396,12 +397,12 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	public String sendFriendsReqsResponse(Context context, String approvedFriendNames,
 			String discardedFriendNames) 
 	{
-		String params = "username=" + this.username +
-		"&password=" + this.password +
-		"&action=" + "responseOfFriendReqs"+
-		"&approvedFriends=" + approvedFriendNames +
-		"&discardedFriends=" +discardedFriendNames +
-		"&";
+		String params = "FRIEND_RESPONSE:;:" + this.username +
+		":;:" + this.password +
+		":;:" + "responseOfFriendReqs"+
+		":;:" + approvedFriendNames +
+		":;:" +discardedFriendNames
+		;
 
 		String result = socketOperator.sendHttpRequest(context, params);		
 		
