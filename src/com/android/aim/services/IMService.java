@@ -55,20 +55,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-
-/**
- * This is an example of implementing an application service that runs locally
- * in the same process as the application.  The {@link LocalServiceController}
- * and {@link LocalServiceBinding} classes show how to interact with the
- * service.
- *
- * <p>Notice the use of the {@link NotificationManager} when interesting things
- * happen in the service.  This is generally how background services should
- * interact with the user, rather than doing something more disruptive such as
- * calling startActivity().
- */
 public class IMService extends Service implements IAppManager, IUpdateData {
-//	private NotificationManager mNM;
 	
 	public static String USERNAME;
 	public static final String TAKE_MESSAGE = "Take_Message";
@@ -76,7 +63,6 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	public static final String MESSAGE_LIST_UPDATED = "Take Message List";
 	public ConnectivityManager conManager = null; 
 	private final int UPDATE_TIME_PERIOD = 15000;
-//	private static final INT LISTENING_PORT_NO = 8956;
 	private String rawFriendList = new String();
 	private String rawMessageList = new String();
 
@@ -107,56 +93,43 @@ public class IMService extends Service implements IAppManager, IUpdateData {
          mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
          localstoragehandler = new LocalStorageHandler(this);
-        // Display a notification about us starting.  We put an icon in the status bar.
-     //   showNotification();
-    	conManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-    	new LocalStorageHandler(this);
+         // Display a notification about us starting.  We put an icon in the status bar.
+         //   showNotification();
+         conManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+         new LocalStorageHandler(this);
     	
-    	// Timer is used to take the friendList info every UPDATE_TIME_PERIOD;
-		timer = new Timer();   
+         // Timer is used to take the friendList info every UPDATE_TIME_PERIOD;
+         timer = new Timer();   
 		
-		Thread thread = new Thread()
-		{
-			@Override
-			public void run() {			
+         Thread thread = new Thread()
+         {
+        	 @Override
+        	 public void run() {			
 				
-				//socketOperator.startListening(LISTENING_PORT_NO);
-				Random random = new Random();
-				int tryCount = 0;
-				while (socketOperator.startListening(10000 + random.nextInt(20000))  == 0 )
-				{		
-					tryCount++; 
-					if (tryCount > 10)
-					{
-						// if it can't listen a port after trying 10 times, give up...
-						break;
-					}
+        		 //socketOperator.startListening(LISTENING_PORT_NO);
+        		 Random random = new Random();
+        		 int tryCount = 0;
+        		 while (socketOperator.startListening(10000 + random.nextInt(20000))  == 0 )
+        		 {		
+        			 tryCount++; 
+        			 if (tryCount > 10)
+        			 {
+        				 // if it can't listen a port after trying 10 times, give up...
+        				 break;
+        			 }
 					
-				}
-			}
-		};		
-		thread.start();
+        		 }
+        	 }
+         };		
+         thread.start();
     
     }
-
-/*
-    @Override
-    public void onDestroy() {
-        // Cancel the persistent notification.
-        mNM.cancel(R.string.local_service_started);
-
-        // Tell the user we stopped.
-        Toast.makeText(this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
-    }
-*/	
 
 	@Override
 	public IBinder onBind(Intent intent) 
 	{
 		return mBinder;
 	}
-
-
 
 
 	/**
@@ -171,7 +144,6 @@ public class IMService extends Service implements IAppManager, IUpdateData {
     	String text = username + ": " + 
      				((msg.length() < 5) ? msg : msg.substring(0, 5)+ "...");
     	
-    	//NotificationCompat.Builder notification = new NotificationCompat.Builder(R.drawable.stat_sample, title,System.currentTimeMillis());
     	NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
     	.setSmallIcon(R.drawable.stat_sample)
     	.setContentTitle(title)
@@ -188,13 +160,9 @@ public class IMService extends Service implements IAppManager, IUpdateData {
                 i, 0);
 
         // Set the info for the views that show in the notification panel.
-        // msg.length()>15 ? MSG : msg.substring(0, 15);
         mBuilder.setContentIntent(contentIntent); 
         
         mBuilder.setContentText("New message from " + username + ": " + msg);
-        
-        //TODO: it can be improved, for instance message coming from same user may be concatenated 
-        // next version
         
         // Send the notification.
         // We use a layout id because it is a unique number.  We use it later to cancel.
@@ -270,8 +238,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 			{			
 				public void run() 
 				{
-					try {					
-						//rawFriendList = IMService.this.getFriendList();
+					try {
 						// sending friend list 
 						Intent i = new Intent(FRIEND_LIST_UPDATED);
 						Intent i2 = new Intent(MESSAGE_LIST_UPDATED);
@@ -305,7 +272,6 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	public void messageReceived(String username, String message) 
 	{				
 		
-		//FriendInfo friend = FriendController.getFriendInfo(username);
 		MessageInfo msg = MessageController.checkMessage(username);
 		if ( msg != null)
 		{			

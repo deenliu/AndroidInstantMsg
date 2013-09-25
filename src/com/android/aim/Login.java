@@ -97,14 +97,11 @@ public class Login extends Activity {
 			{					
 				if (imService == null) {
 					Toast.makeText(getApplicationContext(),R.string.not_connected_to_service, Toast.LENGTH_LONG).show();
-					//showDialog(NOT_CONNECTED_TO_SERVICE);
 					return;
 				}
 				else if (imService.isNetworkConnected() == false)
 				{
 					Toast.makeText(getApplicationContext(),R.string.not_connected_to_network, Toast.LENGTH_LONG).show();
-					//showDialog(NOT_CONNECTED_TO_NETWORK);
-					
 				}
 				else if (usernameText.length() > 0 && 
 					passwordText.length() > 0)
@@ -129,8 +126,6 @@ public class Login extends Activity {
 								handler.post(new Runnable(){
 									public void run() {	
 										Toast.makeText(getApplicationContext(),R.string.make_sure_username_and_password_correct, Toast.LENGTH_LONG).show();
-
-										//showDialog(MAKE_SURE_USERNAME_AND_PASSWORD_CORRECT);
 									}									
 								});
 														
@@ -143,8 +138,7 @@ public class Login extends Activity {
 								 */		
 								handler.post(new Runnable(){
 									public void run() {										
-										Intent i = new Intent(Login.this, FriendList.class);												
-										//i.putExtra(FRIEND_LIST, result);						
+										Intent i = new Intent(Login.this, FriendList.class);					
 										startActivity(i);	
 										Login.this.finish();
 									}									
@@ -162,7 +156,6 @@ public class Login extends Activity {
 					 * Username or Password is not filled, alert the user
 					 */
 					Toast.makeText(getApplicationContext(),R.string.fill_both_username_and_password, Toast.LENGTH_LONG).show();
-					//showDialog(FILL_BOTH_USERNAME_AND_PASSWORD);
 				}				
 			}       	
         });

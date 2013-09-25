@@ -262,7 +262,6 @@ public class FriendList extends ListActivity
 		bindService(new Intent(FriendList.this, IMService.class), mConnection , Context.BIND_AUTO_CREATE);
 
 		IntentFilter i = new IntentFilter();
-		//i.addAction(IMService.TAKE_MESSAGE);	
 		i.addAction(IMService.FRIEND_LIST_UPDATED);
 
 		registerReceiver(messageReceiver, i);			

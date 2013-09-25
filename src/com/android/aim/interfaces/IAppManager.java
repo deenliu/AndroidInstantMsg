@@ -11,7 +11,6 @@ public interface IAppManager {
 	public String sendMessage(Context context, String username,String tousername, String message) throws UnsupportedEncodingException;
 	public String authenticateUser(Context context, String usernameText, String passwordText) throws UnsupportedEncodingException; 
 	public void messageReceived(String username, String message);
-//	public void setUserKey(String value);
 	public boolean isNetworkConnected();
 	public boolean isUserAuthenticated();
 	public String getLastRawFriendList();

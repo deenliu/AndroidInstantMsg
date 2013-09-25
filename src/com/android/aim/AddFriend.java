@@ -1,4 +1,3 @@
-// TODO: Add licence header
 
 package com.android.aim;
 
@@ -23,7 +22,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-// TODO: Add javadoc
 public class AddFriend extends Activity implements OnClickListener {
 	private final Context context = this;
     private static Button mAddFriendButton;
@@ -110,7 +108,6 @@ public class AddFriend extends Activity implements OnClickListener {
         }
     };
 
-    // TODO: Remove deprecated method
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(AddFriend.this);
         if (id == TYPE_FRIEND_USERNAME) {
@@ -118,7 +115,6 @@ public class AddFriend extends Activity implements OnClickListener {
                    .setMessage(R.string.type_friend_username)
                    .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int whichButton) {
-                           // TODO
                        }
                    });
         }
@@ -128,17 +124,14 @@ public class AddFriend extends Activity implements OnClickListener {
 
     private void addNewFriend() {
         if (mFriendUserNameText.length() > 0) {
-            // TODO: A thread is really needed ?
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    // TODO: Please check if the request is successful and raise a error message if needed.
                     mImService.addNewFriendRequest(context, mFriendUserNameText.getText().toString());
                 }
             };
             thread.start();
 
-            // TODO: Show the toast only if the sent of the request is successful
             Toast.makeText(AddFriend.this, R.string.request_sent, Toast.LENGTH_SHORT).show();
 
             finish();

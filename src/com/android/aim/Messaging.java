@@ -83,15 +83,8 @@ public class Messaging extends Activity {
 		friend.ip = extras.getString(FriendInfo.IP);
 		friend.port = extras.getString(FriendInfo.PORT);
 		String msg = extras.getString(MessageInfo.MESSAGETEXT);
-		 
-		
 		
 		setTitle("Messaging with " + friend.userName);
-	
-		
-	//	EditText friendUserName = (EditText) findViewById(R.id.friendUserName);
-	//	friendUserName.setText(friend.userName);
-		
 		
 		localstoragehandler = new LocalStorageHandler(this);
 		dbCursor = localstoragehandler.get(friend.userName, IMService.USERNAME );

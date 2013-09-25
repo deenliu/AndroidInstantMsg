@@ -22,7 +22,6 @@ import android.widget.Toast;
 public class UnApprovedFriendList extends ListActivity {
 	private final Context context = this;
 	private static final int APPROVE_SELECTED_FRIENDS_ID = 0;
-//	private static final int DISCARD_ID = 1;
 	private String[] friendUsernames;
 	private IAppManager imService;
 	String approvedFriendNames = new String(); // comma separated

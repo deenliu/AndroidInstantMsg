@@ -75,10 +75,7 @@ public class LocalStorageHandler extends SQLiteOpenHelper {
 					
 			SQLiteDatabase db = getWritableDatabase();
 			String SELECT_QUERY = "SELECT * FROM " + TABLE_NAME_MESSAGES + " WHERE " + MESSAGE_SENDER + " LIKE '" + sender + "' AND " + MESSAGE_RECEIVER + " LIKE '" + receiver + "' OR " + MESSAGE_SENDER + " LIKE '" + receiver + "' AND " + MESSAGE_RECEIVER + " LIKE '" + sender + "' ORDER BY " + _ID + " ASC";
-			return db.rawQuery(SELECT_QUERY,null);
-			
-			//return db.query(TABLE_NAME_MESSAGES, null, MESSAGE_SENDER + " LIKE ? OR " + MESSAGE_SENDER + " LIKE ?", sender , null, null, _ID + " ASC");
-		
+			return db.rawQuery(SELECT_QUERY,null);		
 	}
 	
 	
