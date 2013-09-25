@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="at.vcity.androidim"
+    package="com.android.aim"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="at.vcity.androidim.FriendList" >
+        <activity android:name="com.android.aim.FriendList" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" >
                 </action>
@@ -26,10 +26,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name="at.vcity.androidim.services.IMService" >
+        <service android:name="com.android.aim.services.IMService" >
         </service>
 
-        <activity android:name="at.vcity.androidim.Welcome" >
+        <activity android:name="com.android.aim.Welcome" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" >
                 </action>
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="at.vcity.androidim.Login" >
+        <activity android:name="com.android.aim.Login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" >
                 </action>
@@ -48,7 +48,7 @@
                 </category>
             </intent-filter>
         </activity>
-        <activity android:name="at.vcity.androidim.Messaging" >
+        <activity android:name="com.android.aim.Messaging" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" >
                 </action>
@@ -57,7 +57,7 @@
                 </category>
             </intent-filter>
         </activity>
-        <activity android:name="at.vcity.androidim.SignUp" >
+        <activity android:name="com.android.aim.SignUp" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" >
                 </action>
@@ -66,7 +66,7 @@
                 </category>
             </intent-filter>
         </activity>
-        <activity android:name="at.vcity.androidim.AddFriend" >
+        <activity android:name="com.android.aim.AddFriend" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" >
                 </action>
@@ -75,7 +75,7 @@
                 </category>
             </intent-filter>
         </activity>
-        <activity android:name="at.vcity.androidim.UnApprovedFriendList" >
+        <activity android:name="com.android.aim.UnApprovedFriendList" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" >
                 </action>
