@@ -25,7 +25,7 @@ public class SocketOperator implements ISocketOperator
 	
 	private int listeningPort = 0;
 	
-	private static final String HTTP_REQUEST_FAILED = null;
+	private static final String HTTP_REQUEST_FAILED = new String();
 	
 	private HashMap<InetAddress, Socket> sockets = new HashMap<InetAddress, Socket>();
 	

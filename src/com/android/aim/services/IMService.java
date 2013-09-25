@@ -122,6 +122,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 				 // if it can't listen a port after trying 10 times, give up...
 				 break;
 			 }
+			
 		 }
     }
 
