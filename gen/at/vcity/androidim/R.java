@@ -18,25 +18,28 @@ public final class R {
         public static final int stat_sample=0x7f020004;
     }
     public static final class id {
-        public static final int addFriend=0x7f060001;
-        public static final int cancel=0x7f060002;
-        public static final int cancel_login=0x7f06000a;
-        public static final int cancel_signUp=0x7f060012;
-        public static final int email=0x7f060010;
-        public static final int icon=0x7f060003;
-        public static final int login=0x7f060009;
-        public static final int message=0x7f06000c;
-        public static final int messageHistory=0x7f06000b;
-        public static final int newFriendUsername=0x7f060000;
-        public static final int password=0x7f060008;
-        public static final int passwordAgain=0x7f06000f;
-        public static final int sendMessageButton=0x7f06000d;
-        public static final int signUp=0x7f060011;
-        public static final int start=0x7f060005;
-        public static final int stop=0x7f060006;
-        public static final int text=0x7f060004;
-        public static final int text1=0x7f06000e;
-        public static final int userName=0x7f060007;
+        public static final int addFriend=0x7f070001;
+        public static final int cancel=0x7f070002;
+        public static final int cancel_login=0x7f07000a;
+        public static final int cancel_signUp=0x7f070012;
+        public static final int email=0x7f070010;
+        public static final int icon=0x7f070003;
+        public static final int login=0x7f070009;
+        public static final int login_btn=0x7f070014;
+        public static final int menu_settings=0x7f070015;
+        public static final int message=0x7f07000c;
+        public static final int messageHistory=0x7f07000b;
+        public static final int newFriendUsername=0x7f070000;
+        public static final int password=0x7f070008;
+        public static final int passwordAgain=0x7f07000f;
+        public static final int sendMessageButton=0x7f07000d;
+        public static final int signUp=0x7f070011;
+        public static final int signup_btn=0x7f070013;
+        public static final int start=0x7f070005;
+        public static final int stop=0x7f070006;
+        public static final int text=0x7f070004;
+        public static final int text1=0x7f07000e;
+        public static final int userName=0x7f070007;
     }
     public static final class layout {
         public static final int add_new_friend=0x7f030000;
@@ -48,6 +51,10 @@ public final class R {
         public static final int messaging_screen=0x7f030006;
         public static final int notes_row=0x7f030007;
         public static final int sign_up_screen=0x7f030008;
+        public static final int welcome_page=0x7f030009;
+    }
+    public static final class menu {
+        public static final int welcome_page=0x7f060000;
     }
     public static final class string {
         public static final int OK=0x7f04000b;
@@ -61,11 +68,13 @@ public final class R {
         public static final int fill_both_username_and_password=0x7f04000d;
         public static final int friend_list=0x7f040002;
         public static final int hello=0x7f040000;
+        public static final int hello_world=0x7f040023;
         public static final int local_service_connected=0x7f04000a;
         public static final int local_service_started=0x7f040008;
         public static final int local_service_stopped=0x7f040009;
         public static final int login=0x7f040005;
         public static final int make_sure_username_and_password_correct=0x7f04000e;
+        public static final int menu_settings=0x7f040024;
         public static final int message_cannot_be_sent=0x7f040022;
         public static final int messaging=0x7f040007;
         public static final int new_friend_request_exist=0x7f04001f;
@@ -81,6 +90,7 @@ public final class R {
         public static final int signup_successfull=0x7f040018;
         public static final int signup_type_same_password_in_password_fields=0x7f040015;
         public static final int signup_username_crashed=0x7f040017;
+        public static final int title_activity_welcome=0x7f040025;
         public static final int type_friend_username=0x7f04001e;
         public static final int user_offline=0x7f04000f;
         public static final int username=0x7f040003;
