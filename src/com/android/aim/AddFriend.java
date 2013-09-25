@@ -115,6 +115,7 @@ public class AddFriend extends Activity implements OnClickListener {
                    .setMessage(R.string.type_friend_username)
                    .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int whichButton) {
+                    	   // Do nothing;
                        }
                    });
         }

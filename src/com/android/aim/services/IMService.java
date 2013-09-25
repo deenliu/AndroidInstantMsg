@@ -94,7 +94,6 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 
          localstoragehandler = new LocalStorageHandler(this);
          // Display a notification about us starting.  We put an icon in the status bar.
-         //   showNotification();
          conManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
          new LocalStorageHandler(this);
     	
@@ -105,24 +104,25 @@ public class IMService extends Service implements IAppManager, IUpdateData {
          {
         	 @Override
         	 public void run() {			
-				
-        		 //socketOperator.startListening(LISTENING_PORT_NO);
-        		 Random random = new Random();
-        		 int tryCount = 0;
-        		 while (socketOperator.startListening(10000 + random.nextInt(20000))  == 0 )
-        		 {		
-        			 tryCount++; 
-        			 if (tryCount > 10)
-        			 {
-        				 // if it can't listen a port after trying 10 times, give up...
-        				 break;
-        			 }
-					
-        		 }
+        		 waitForAPort();
         	 }
          };		
          thread.start();
     
+    }
+    
+    public void waitForAPort(){
+    	Random random = new Random();
+		 int tryCount = 0;
+		 while (socketOperator.startListening(10000 + random.nextInt(20000))  == 0 )
+		 {		
+			 tryCount++; 
+			 if (tryCount > 10)
+			 {
+				 // if it can't listen a port after trying 10 times, give up...
+				 break;
+			 }
+		 }
     }
 
 	@Override
@@ -145,19 +145,16 @@ public class IMService extends Service implements IAppManager, IUpdateData {
      				((msg.length() < 5) ? msg : msg.substring(0, 5)+ "...");
     	
     	NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-    	.setSmallIcon(R.drawable.stat_sample)
-    	.setContentTitle(title)
-    	.setContentText(text); 
+    		.setSmallIcon(R.drawable.stat_sample)
+    		.setContentTitle(title)
+    		.setContentText(text); 
     	
-    	
-
         Intent i = new Intent(this, Messaging.class);
         i.putExtra(FriendInfo.USERNAME, username);
         i.putExtra(MessageInfo.MESSAGETEXT, msg);	
         
         // The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                i, 0);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, i, 0);
 
         // Set the info for the views that show in the notification panel.
         mBuilder.setContentIntent(contentIntent); 
@@ -207,9 +204,6 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		 }
 		 return rawMessageList;
 	}
-	
-	
-
 	/**
 	 * authenticateUser: it authenticates the user and if succesful
 	 * it returns the friend list or if authentication is failed 
@@ -223,7 +217,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		
 		this.authenticatedUser = false;
 		
-		String result = this.getFriendList(context); //socketOperator.sendHttpRequest(getAuthenticateUserParams(username, password));
+		String result = this.getFriendList(context);
 		if (result != null && !result.equals(Login.AUTHENTICATION_FAILED)) 
 		{			
 			// if user is authenticated then return string from server is not equal to AUTHENTICATION_FAILED
@@ -238,30 +232,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 			{			
 				public void run() 
 				{
-					try {
-						// sending friend list 
-						Intent i = new Intent(FRIEND_LIST_UPDATED);
-						Intent i2 = new Intent(MESSAGE_LIST_UPDATED);
-						String tmp = IMService.this.getFriendList(context);
-						String tmp2 = IMService.this.getMessageList(context);
-						if (tmp != null) {
-							i.putExtra(FriendInfo.FRIEND_LIST, tmp);
-							sendBroadcast(i);	
-							Log.i("friend list broadcast sent ", "");
-						
-						if (tmp2 != null) {
-							i2.putExtra(MessageInfo.MESSAGE_LIST, tmp2);
-							sendBroadcast(i2);	
-							Log.i("friend list broadcast sent ", "");
-						}
-						}
-						else {
-							Log.i("friend list returned null", "");
-						}
-					}
-					catch (Exception e) {
-						e.printStackTrace();
-					}					
+					sendFriendsList(context);
 				}			
 			}, UPDATE_TIME_PERIOD, UPDATE_TIME_PERIOD);
 		}
@@ -269,6 +240,32 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		return result;		
 	}
 
+	public void sendFriendsList(Context context){
+		try {
+			Intent i = new Intent(FRIEND_LIST_UPDATED);
+			Intent i2 = new Intent(MESSAGE_LIST_UPDATED);
+			String tmp = IMService.this.getFriendList(context);
+			String tmp2 = IMService.this.getMessageList(context);
+			if (tmp != null) {
+				i.putExtra(FriendInfo.FRIEND_LIST, tmp);
+				sendBroadcast(i);	
+				Log.i("friend list broadcast sent ", "");
+			
+			if (tmp2 != null) {
+				i2.putExtra(MessageInfo.MESSAGE_LIST, tmp2);
+				sendBroadcast(i2);	
+				Log.i("friend list broadcast sent ", "");
+			}
+			}
+			else {
+				Log.i("friend list returned null", "");
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void messageReceived(String username, String message) 
 	{				
 		
@@ -394,6 +391,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 			e.printStackTrace();
 		}	
 	}
+	
 	private void parseMessageInfo(String xml)
 	{			
 		try 
@@ -418,24 +416,16 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		this.setUserKey(userKey);
 		//FriendController.	
 		MessageController.setMessagesInfo(messages);
-		//Log.i("MESSAGEIMSERVICE","messages.length="+messages.length);
 		
 		int i = 0;
 		while (i < messages.length){
 			messageReceived(messages[i].userid,messages[i].messagetext);
-			//appManager.messageReceived(messages[i].userid,messages[i].messagetext);
 			i++;
 		}
-		
 		
 		FriendController.setFriendsInfo(friends);
 		FriendController.setUnapprovedFriendsInfo(unApprovedFriends);
 		
 	}
-
-
-	
-	
-	
 	
 }

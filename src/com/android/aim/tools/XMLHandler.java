@@ -14,7 +14,7 @@ import com.android.aim.types.STATUS;
 import android.util.Log;
 
 /*
- * Parses the xml data to FriendInfo array
+ * Parses the xml data to the FriendInfo array
  * XML Structure 
  * <?xml version="1.0" encoding="UTF-8"?>
  * 

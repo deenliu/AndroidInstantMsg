@@ -135,8 +135,6 @@ public class FriendList extends ListActivity
 				if (action.equals(IMService.FRIEND_LIST_UPDATED))
 				{
 					// taking friend List from broadcast
-					//String rawFriendList = extra.getString(FriendInfo.FRIEND_LIST);
-					//FriendList.this.parseFriendInfo(rawFriendList);
 					FriendList.this.updateData(FriendController.getFriendsInfo(), 
 												FriendController.getUnapprovedFriendsInfo());
 					
@@ -200,9 +198,6 @@ public class FriendList extends ListActivity
 				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
 		    	.setSmallIcon(R.drawable.stat_sample)
 		    	.setContentTitle(getText(R.string.new_friend_request_exist));
-				/*Notification notification = new Notification(R.drawable.stat_sample, 
-						getText(R.string.new_friend_request_exist),
-						System.currentTimeMillis());*/
 
 				Intent i = new Intent(this, UnApprovedFriendList.class);
 				i.putExtra(FriendInfo.FRIEND_LIST, tmp);				
@@ -211,9 +206,6 @@ public class FriendList extends ListActivity
 						i, 0);
 
 				mBuilder.setContentText("You have new friend request(s)");
-				/*notification.setLatestEventInfo(this, getText(R.string.new_friend_request_exist),
-												"You have new friend request(s)", 
-												contentIntent);*/
 				
 				mBuilder.setContentIntent(contentIntent);
 
@@ -242,9 +234,6 @@ public class FriendList extends ListActivity
 		i.putExtra(FriendInfo.IP, friend.ip);		
 		startActivity(i);
 	}
-
-
-
 
 	@Override
 	protected void onPause() 
@@ -306,9 +295,6 @@ public class FriendList extends ListActivity
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		super.onActivityResult(requestCode, resultCode, data);
-		
-	
-		
 		
 	}
 }

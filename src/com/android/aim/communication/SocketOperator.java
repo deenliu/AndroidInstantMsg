@@ -44,7 +44,6 @@ public class SocketOperator implements ISocketOperator
 		@Override
 		public void run() {
 			 try {
-	//			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 				BufferedReader in = new BufferedReader(
 						    new InputStreamReader(
 						    		clientSocket.getInputStream()));
@@ -52,11 +51,7 @@ public class SocketOperator implements ISocketOperator
 				
 				 while ((inputLine = in.readLine()) != null) 
 				 {
-					 if (inputLine.equals("exit") == false)
-					 {
-						 //appManager.messageReceived(inputLine);						 
-					 }
-					 else
+					 if (inputLine.equals("exit"))
 					 {
 						 clientSocket.shutdownInput();
 						 clientSocket.shutdownOutput();
@@ -113,9 +108,7 @@ public class SocketOperator implements ISocketOperator
 		try {
 			serverSocket = new ServerSocket(portNo);
 			this.listeningPort = portNo;
-		} catch (IOException e) {			
-			
-			//e.printStackTrace();
+		} catch (IOException e) {
 			this.listeningPort = 0;
 			return 0;
 		}
@@ -124,8 +117,7 @@ public class SocketOperator implements ISocketOperator
 			try {
 				new ReceiveConnection(serverSocket.accept()).start();
 				
-			} catch (IOException e) {
-				//e.printStackTrace();				
+			} catch (IOException e) {			
 				return 2;
 			}
 		}

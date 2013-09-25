@@ -24,8 +24,8 @@ public class UnApprovedFriendList extends ListActivity {
 	private static final int APPROVE_SELECTED_FRIENDS_ID = 0;
 	private String[] friendUsernames;
 	private IAppManager imService;
-	String approvedFriendNames = new String(); // comma separated
-	String discardedFriendNames = new String(); // comma separated
+	String approvedFrdNames = new String(); // comma separated
+	String discardedFrdNames = new String(); // comma separated
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +38,7 @@ public class UnApprovedFriendList extends ListActivity {
 		
 		friendUsernames = names.split(",");
 		
-		setListAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_multiple_choice, friendUsernames));			
+		setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, friendUsernames));			
 		
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);	
 		
@@ -65,31 +64,9 @@ public class UnApprovedFriendList extends ListActivity {
 		{	  
 			case APPROVE_SELECTED_FRIENDS_ID:
 			{
-				int reqlength = getListAdapter().getCount();
+				getFriendsList();
 				
-				for (int i = 0; i < reqlength ; i++) 
-				{
-					if (getListView().isItemChecked(i)) {
-						approvedFriendNames = approvedFriendNames.concat(friendUsernames[i]).concat(",");
-					}
-					else {
-						discardedFriendNames = discardedFriendNames.concat(friendUsernames[i]).concat(",");						
-					}					
-				}
-				
-				Thread thread = new Thread(){
-					@Override
-					public void run() {
-						if ( approvedFriendNames.length() > 0 || 
-							 discardedFriendNames.length() > 0 
-							) 
-						{
-							imService.sendFriendsReqsResponse(context, approvedFriendNames, discardedFriendNames);
-							
-						}											
-					}
-				};
-				thread.start();
+				sendFriendRequest();
 
 				Toast.makeText(UnApprovedFriendList.this, R.string.request_sent, Toast.LENGTH_SHORT).show();
 			
@@ -101,7 +78,37 @@ public class UnApprovedFriendList extends ListActivity {
 
 		return super.onMenuItemSelected(featureId, item);		
 	}
+	
+	public void getFriendsList(){
+		int reqlength = getListAdapter().getCount();
+		
+		for (int i = 0; i < reqlength ; i++) 
+		{
+			if (getListView().isItemChecked(i)) {
+				approvedFrdNames = approvedFrdNames.concat(friendUsernames[i]).concat(",");
+			}
+			else {
+				discardedFrdNames = discardedFrdNames.concat(friendUsernames[i]).concat(",");						
+			}					
+		}
+	}
 
+	public void sendFriendRequest(){
+		Thread thread = new Thread(){
+			@Override
+			public void run() {
+				if ( approvedFrdNames.length() > 0 || 
+					 discardedFrdNames.length() > 0 
+					) 
+				{
+					imService.sendFriendsReqsResponse(context, approvedFrdNames, discardedFrdNames);
+					
+				}											
+			}
+		};
+		thread.start();
+	}
+	
 	@Override
 	protected void onPause() 
 	{
@@ -125,8 +132,7 @@ public class UnApprovedFriendList extends ListActivity {
 		}
 		public void onServiceDisconnected(ComponentName className) {          
 			imService = null;
-			Toast.makeText(UnApprovedFriendList.this, R.string.local_service_stopped,
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(UnApprovedFriendList.this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
 		}
 	};
 }

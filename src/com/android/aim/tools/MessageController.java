@@ -16,8 +16,6 @@ public class MessageController
 		MessageController.messagesInfo = messageInfo;
 	}
 	
-	
-	
 	public static MessageInfo checkMessage(String username)
 	{
 		MessageInfo result = null;
@@ -25,19 +23,13 @@ public class MessageController
 		{
 			for (int i = 0; i < messagesInfo.length;) 
 			{
-				
 					result = messagesInfo[i];
-					break;
-								
+					break;		
 			}			
 		}		
 		return result;
 	}
 	
-	
-
-
-
 	public static MessageInfo getMessageInfo(String username) 
 	{
 		MessageInfo result = null;
@@ -46,26 +38,14 @@ public class MessageController
 			for (int i = 0; i < messagesInfo.length;) 
 			{
 					result = messagesInfo[i];
-					break;
-							
+					break;	
 			}			
 		}		
 		return result;
 	}
 
-
-
-
-
-
 	public static MessageInfo[] getMessagesInfo() {
 		return messagesInfo;
 	}
-
-
-
-	
-	
-	
 
 }

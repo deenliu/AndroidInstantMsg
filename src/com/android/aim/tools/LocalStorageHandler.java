@@ -22,16 +22,16 @@ public class LocalStorageHandler extends SQLiteOpenHelper {
 	private static final String MESSAGE_MESSAGE = "message";
 	
 	
-	private static final String TABLE_MESSAGE_CREATE
-	= "CREATE TABLE " + TABLE_NAME_MESSAGES
-	+ " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-	+ MESSAGE_RECEIVER + " VARCHAR(25), "
-	+ MESSAGE_SENDER + " VARCHAR(25), "
-	+MESSAGE_MESSAGE + " VARCHAR(255));";
+	private static final String TABLE_MESSAGE_CREATE = new StringBuilder()
+		.append("CREATE TABLE ")
+		.append(TABLE_NAME_MESSAGES)
+		.append(" (").append(_ID).append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+		.append(MESSAGE_RECEIVER + " VARCHAR(25), ")
+		.append(MESSAGE_SENDER).append(" VARCHAR(25), ")
+		.append(MESSAGE_MESSAGE).append(" VARCHAR(255));")
+		.toString();
 	
-	private static final String TABLE_MESSAGE_DROP = 
-			"DROP TABLE IF EXISTS "
-			+ TABLE_NAME_MESSAGES;
+	private static final String TABLE_MESSAGE_DROP = "DROP TABLE IF EXISTS " + TABLE_NAME_MESSAGES;
 	
 	
 	public LocalStorageHandler(Context context) {
