@@ -85,7 +85,6 @@ public class SocketOperator implements ISocketOperator
 			while ((inputLine = in.readLine()) != null) {
 				result = result.concat(inputLine);				
 			}
-			in.close();
 	        
 	        socket.close();
 	        

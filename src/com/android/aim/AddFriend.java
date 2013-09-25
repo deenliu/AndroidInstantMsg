@@ -44,19 +44,9 @@ public class AddFriend extends Activity implements OnClickListener {
         mCancelButton = (Button)findViewById(R.id.cancel);
         mFriendUserNameText = (EditText)findViewById(R.id.newFriendUsername);
 
-        if (mAddFriendButton != null) {
-            mAddFriendButton.setOnClickListener(this);
-        } else {
-            Log.e(LOG_TAG, "onCreate: mAddFriendButton is null");
-            throw new NullPointerException("onCreate: mAddFriendButton is null");
-        }
-
-        if (mCancelButton != null) {
-            mCancelButton.setOnClickListener(this);
-        } else {
-            Log.e(LOG_TAG, "onCreate: mCancelButton is null");
-            throw new NullPointerException("onCreate: mCancelButton is null");
-        }
+        mAddFriendButton.setOnClickListener(this);
+        mCancelButton.setOnClickListener(this);
+        
     }
 
     @Override
@@ -86,7 +76,7 @@ public class AddFriend extends Activity implements OnClickListener {
     @Override
     public void onClick(View view) {
         if (view == mCancelButton) {
-            finish();
+        	
         } else if (view == mAddFriendButton) {
             addNewFriend();
         } else {
@@ -124,7 +114,7 @@ public class AddFriend extends Activity implements OnClickListener {
      }
 
     private void addNewFriend() {
-        if (mFriendUserNameText.length() > 0) {
+        if (mFriendUserNameText.length() > 10) {
             Thread thread = new Thread() {
                 @Override
                 public void run() {
@@ -135,9 +125,8 @@ public class AddFriend extends Activity implements OnClickListener {
 
             Toast.makeText(AddFriend.this, R.string.request_sent, Toast.LENGTH_SHORT).show();
 
-            finish();
         } else {
-            Log.e(LOG_TAG, "addNewFriend: username length (" + mFriendUserNameText.length() + ") is < 0");
+            Log.e(LOG_TAG, "addNewFriend: username length (" + mFriendUserNameText.length() + ") is < 10");
             Toast.makeText(AddFriend.this, R.string.type_friend_username, Toast.LENGTH_LONG).show();
         }
     }

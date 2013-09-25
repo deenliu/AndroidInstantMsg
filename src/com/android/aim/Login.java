@@ -56,7 +56,6 @@ public class Login extends Activity {
             {
             	Intent i = new Intent(Login.this, FriendList.class);																
 				startActivity(i);
-				Login.this.finish();
             }
         }
 
@@ -103,8 +102,8 @@ public class Login extends Activity {
 				{
 					Toast.makeText(getApplicationContext(),R.string.not_connected_to_network, Toast.LENGTH_LONG).show();
 				}
-				else if (usernameText.length() > 0 && 
-					passwordText.length() > 0)
+				else if (usernameText.length() >= 0 && 
+					passwordText.length() >= 0)
 				{
 					
 					Thread loginThread = new Thread(){
@@ -118,7 +117,7 @@ public class Login extends Activity {
 								
 								e.printStackTrace();
 							}
-							if (result == null || result.equals(AUTHENTICATION_FAILED)) 
+							if (result.equals(AUTHENTICATION_FAILED)) 
 							{
 								/*
 								 * Authenticatin failed, inform the user
@@ -139,8 +138,7 @@ public class Login extends Activity {
 								handler.post(new Runnable(){
 									public void run() {										
 										Intent i = new Intent(Login.this, FriendList.class);					
-										startActivity(i);	
-										Login.this.finish();
+										startActivity(i);
 									}									
 								});
 								

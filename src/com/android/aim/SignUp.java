@@ -85,57 +85,44 @@ public class SignUp extends Activity {
 	        signUpButton.setOnClickListener(new OnClickListener(){
 				public void onClick(View arg0) 
 				{						
-					if (usernameText.length() > 0 &&		
-						passwordText.length() > 0 && 
-						passwordAgainText.length() > 0 &&
-						eMailText.length() > 0
+					if (usernameText.length() >= 0 &&		
+						passwordText.length() >= 0 && 
+						passwordAgainText.length() >= 0 &&
+						eMailText.length() >= 0
 						)
 					{
-						if (passwordText.getText().toString().equals(passwordAgainText.getText().toString())){
-						
-							if (usernameText.length() >= 5 && passwordText.length() >= 5) {
 							
-									Thread thread = new Thread(){
-										String result = new String();
-										@Override
-										public void run() {
-											result = imService.signUpUser(context, usernameText.getText().toString(), 
-													passwordText.getText().toString(), 
-													eMailText.getText().toString());
-		
-											handler.post(new Runnable(){
-		
-												public void run() {
-													if (result.equals(SERVER_RES_RES_SIGN_UP_SUCCESFULL)) {
-														Toast.makeText(getApplicationContext(),R.string.signup_successfull, Toast.LENGTH_LONG).show();
-													}
-													else if (result.equals(SERVER_RES_SIGN_UP_USERNAME_CRASHED)){
-														Toast.makeText(getApplicationContext(),R.string.signup_username_crashed, Toast.LENGTH_LONG).show();
-													}
-													else
-													{
-														Toast.makeText(getApplicationContext(),R.string.signup_failed, Toast.LENGTH_LONG).show();
-													}			
-												}
-		
-											});
+						Thread thread = new Thread(){
+							String result = new String();
+							@Override
+							public void run() {
+								result = imService.signUpUser(context, usernameText.getText().toString(), 
+										passwordText.getText().toString(), 
+										eMailText.getText().toString());
+
+								handler.post(new Runnable(){
+
+									public void run() {
+										if (result.equals(SERVER_RES_RES_SIGN_UP_SUCCESFULL)) {
+											Toast.makeText(getApplicationContext(),R.string.signup_successfull, Toast.LENGTH_LONG).show();
 										}
-		
-									};
-									thread.start();
+										else if (result.equals(SERVER_RES_SIGN_UP_USERNAME_CRASHED)){
+											Toast.makeText(getApplicationContext(),R.string.signup_username_crashed, Toast.LENGTH_LONG).show();
+										}
+										else
+										{
+											Toast.makeText(getApplicationContext(),R.string.signup_failed, Toast.LENGTH_LONG).show();
+										}			
+									}
+
+								});
 							}
-							else{
-								Toast.makeText(getApplicationContext(),R.string.username_and_password_length_short, Toast.LENGTH_LONG).show();
-							}							
-						}
-						else {
-							Toast.makeText(getApplicationContext(),R.string.signup_type_same_password_in_password_fields, Toast.LENGTH_LONG).show();
-						}
-						
+
+						};
+						thread.start();
 					}
 					else {
 						Toast.makeText(getApplicationContext(),R.string.signup_fill_all_fields, Toast.LENGTH_LONG).show();
-						
 					}				
 				}       	
 	        });
@@ -146,7 +133,6 @@ public class SignUp extends Activity {
 					finish();					
 				}	        	
 	        });
-	        
 	        
 	    }
 	
@@ -221,7 +207,6 @@ public class SignUp extends Activity {
 	@Override
 	protected void onResume() {
 		bindService(new Intent(SignUp.this, IMService.class), mConnection , Context.BIND_AUTO_CREATE);
-		   
 		super.onResume();
 	}
 	

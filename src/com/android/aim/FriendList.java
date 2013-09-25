@@ -159,8 +159,7 @@ public class FriendList extends ListActivity
 		}
 		public void onServiceDisconnected(ComponentName className) {          
 			imService = null;
-			Toast.makeText(FriendList.this, R.string.local_service_stopped,
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(FriendList.this, R.string.local_service_stopped, Toast.LENGTH_SHORT).show();
 		}
 	};
 	
@@ -192,7 +191,7 @@ public class FriendList extends ListActivity
 			if (unApprovedFriends.length > 0)
 			{					
 				String tmp = new String();
-				for (int j = 0; j < unApprovedFriends.length; j++) {
+				for (int j = 1; j < unApprovedFriends.length; j++) {
 					tmp = tmp.concat(unApprovedFriends[j].userName).concat(",");			
 				}
 				NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
@@ -202,8 +201,7 @@ public class FriendList extends ListActivity
 				Intent i = new Intent(this, UnApprovedFriendList.class);
 				i.putExtra(FriendInfo.FRIEND_LIST, tmp);				
 
-				PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-						i, 0);
+				PendingIntent contentIntent = PendingIntent.getActivity(this, 0, i, 0);
 
 				mBuilder.setContentText("You have new friend request(s)");
 				

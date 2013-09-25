@@ -25,10 +25,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -66,7 +64,7 @@ public class Messaging extends Activity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);	   
 		
-		setContentView(R.layout.messaging_screen); //messaging_screen);
+		setContentView(R.layout.messaging_screen); 
 				
 		messageHistoryText = (EditText) findViewById(R.id.messageHistory);
 		
@@ -102,67 +100,47 @@ public class Messaging extends Activity {
 		}
 		localstoragehandler.close();
 		
-		if (msg != null) 
-		{
-			this.appendToMessageHistory(friend.userName , msg);
-			((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).cancel((friend.userName+msg).hashCode());
-		}
+		this.appendToMessageHistory(friend.userName , msg);
+		((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).cancel((friend.userName+msg).hashCode());
+
 		
 		sendMessageButton.setOnClickListener(new OnClickListener(){
 			CharSequence message;
 			Handler handler = new Handler();
 			public void onClick(View arg0) {
 				message = messageText.getText();
-				if (message.length()>0) 
-				{		
-					appendToMessageHistory(imService.getUsername(), message.toString());
-					
-					localstoragehandler.insert(imService.getUsername(), friend.userName, message.toString());
+						
+				appendToMessageHistory(imService.getUsername(), message.toString());
+				
+				localstoragehandler.insert(imService.getUsername(), friend.userName, message.toString());
+							
+				messageText.setText("");
+				Thread thread = new Thread(){					
+					public void run() {
+						try {
+							if (imService.sendMessage(context, imService.getUsername(), friend.userName, message.toString()) == null)
+							{
 								
-					messageText.setText("");
-					Thread thread = new Thread(){					
-						public void run() {
-							try {
-								if (imService.sendMessage(context, imService.getUsername(), friend.userName, message.toString()) == null)
-								{
+								handler.post(new Runnable(){	
+
+									public void run() {
+										
+								        Toast.makeText(getApplicationContext(),R.string.message_cannot_be_sent, Toast.LENGTH_LONG).show();
+								
+									}
 									
-									handler.post(new Runnable(){	
-
-										public void run() {
-											
-									        Toast.makeText(getApplicationContext(),R.string.message_cannot_be_sent, Toast.LENGTH_LONG).show();
-
-											
-											//showDialog(MESSAGE_CANNOT_BE_SENT);										
-										}
-										
-									});
-								}
-							} catch (UnsupportedEncodingException e) {
-								Toast.makeText(getApplicationContext(),R.string.message_cannot_be_sent, Toast.LENGTH_LONG).show();
-
-								e.printStackTrace();
+								});
 							}
-						}						
-					};
-					thread.start();
-										
-				}
+						} catch (UnsupportedEncodingException e) {
+							Toast.makeText(getApplicationContext(),R.string.message_cannot_be_sent, Toast.LENGTH_LONG).show();
+
+							e.printStackTrace();
+						}
+					}						
+				};
+				thread.start();
 				
 			}});
-		
-		messageText.setOnKeyListener(new OnKeyListener(){
-			public boolean onKey(View v, int keyCode, KeyEvent event) 
-			{
-				if (keyCode == 66){
-					sendMessageButton.performClick();
-					return true;
-				}
-				return false;
-			}
-			
-			
-		});
 				
 	}
 
@@ -262,7 +240,7 @@ public class Messaging extends Activity {
 	protected void onDestroy() {
 	    super.onDestroy();
 	    if (localstoragehandler != null) {
-	    	localstoragehandler.close();
+	    	
 	    }
 	    if (dbCursor != null) {
 	    	dbCursor.close();

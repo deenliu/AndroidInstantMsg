@@ -69,8 +69,7 @@ public class UnApprovedFriendList extends ListActivity {
 				sendFriendRequest();
 
 				Toast.makeText(UnApprovedFriendList.this, R.string.request_sent, Toast.LENGTH_SHORT).show();
-			
-				finish();				
+				
 				return true;
 			}			
 			
@@ -82,7 +81,7 @@ public class UnApprovedFriendList extends ListActivity {
 	public void getFriendsList(){
 		int reqlength = getListAdapter().getCount();
 		
-		for (int i = 0; i < reqlength ; i++) 
+		for (int i = 1; i < reqlength ; i++) 
 		{
 			if (getListView().isItemChecked(i)) {
 				approvedFrdNames = approvedFrdNames.concat(friendUsernames[i]).concat(",");
