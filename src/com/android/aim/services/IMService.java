@@ -142,7 +142,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
         // Set the icon, scrolling text and TIMESTAMP
     	String title = "AndroidIM: You got a new Message! (" + username + ")";
  				
-    	String text = username + ": " + 
+    	String text =  ": " + 
      				((msg.length() < 5) ? msg : msg.substring(0, 5)+ "...");
     	
     	NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)

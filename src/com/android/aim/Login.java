@@ -163,8 +163,6 @@ public class Login extends Activity {
 			public void onClick(View arg0) 
 			{					
 				imService.exit();
-				finish();
-				
 			}
         	
         });
@@ -253,12 +251,5 @@ public class Login extends Activity {
 	       
 	    return super.onMenuItemSelected(featureId, item);
 	}
-
-	
-	
-    
-    
-    
-    
-    
+  
 }

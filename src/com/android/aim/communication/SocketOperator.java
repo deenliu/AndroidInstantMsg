@@ -77,7 +77,6 @@ public class SocketOperator implements ISocketOperator
 	        Socket socket = new Socket(AUTHENTICATION_SERVER_ADDRESS, AUTHENTICATION_SERVER_PORT);
 	        PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 	        out.println(params);
-	        out.close();
 	        
 	        BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String inputLine;
@@ -86,9 +85,7 @@ public class SocketOperator implements ISocketOperator
 				result = result.concat(inputLine);				
 			}
 	        
-	        socket.close();
-	        
-	    }catch(Exception e){
+	    }catch(IOException e){
 	        e.printStackTrace();
 	    }
 		
