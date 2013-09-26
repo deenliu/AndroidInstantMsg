@@ -79,7 +79,7 @@ public class FriendList extends ListActivity
 
 		public FriendInfo getItem(int position) {			
 
-			return friends[position];
+			return friends[0];
 		}
 
 		public long getItemId(int position) {
@@ -188,7 +188,7 @@ public class FriendList extends ListActivity
 		{
 			NotificationManager NM = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 			
-			if (unApprovedFriends.length > 0)
+			if (unApprovedFriends.length >= 0)
 			{					
 				String tmp = new String();
 				for (int j = 1; j < unApprovedFriends.length; j++) {
@@ -203,7 +203,7 @@ public class FriendList extends ListActivity
 
 				PendingIntent contentIntent = PendingIntent.getActivity(this, 0, i, 0);
 
-				mBuilder.setContentText("You have new friend request(s)");
+				//mBuilder.setContentText("You have new friend request(s)");
 				
 				mBuilder.setContentIntent(contentIntent);
 
@@ -281,7 +281,7 @@ public class FriendList extends ListActivity
 			case EXIT_APP_ID:
 			{
 				imService.exit();
-				finish();
+				//finish();
 				return true;
 			}			
 		}

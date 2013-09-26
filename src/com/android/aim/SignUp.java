@@ -29,10 +29,9 @@ public class SignUp extends Activity {
 	private static final int SIGN_UP_USERNAME_CRASHED = 3;
 	private static final int SIGN_UP_SUCCESSFULL = 4;
 	protected static final int USERNAME_AND_PASSWORD_LENGTH_SHORT = 5;
-	
+
 	private static final String SERVER_RES_RES_SIGN_UP_SUCCESFULL = "1";
 	private static final String SERVER_RES_SIGN_UP_USERNAME_CRASHED = "2";
-	
 	
 	
 	private EditText usernameText;
@@ -73,7 +72,7 @@ public class SignUp extends Activity {
 	    
 	               
 	        setContentView(R.layout.sign_up_screen);
-	        setTitle("Sign up");
+	        //setTitle("Sign up");
 	        
 	        Button signUpButton = (Button) findViewById(R.id.signUp);
 	        Button cancelButton = (Button) findViewById(R.id.cancel_signUp);
@@ -166,6 +165,7 @@ public class SignUp extends Activity {
 				.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						/* User clicked OK so do some stuff */
+						finish();// defect
 					}
 				})        
 				.create();

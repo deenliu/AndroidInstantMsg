@@ -82,7 +82,7 @@ public class Messaging extends Activity {
 		friend.port = extras.getString(FriendInfo.PORT);
 		String msg = extras.getString(MessageInfo.MESSAGETEXT);
 		
-		setTitle("Messaging with " + friend.userName);
+		setTitle("Messaging with " );//+ friend.userName);
 		
 		localstoragehandler = new LocalStorageHandler(this);
 		dbCursor = localstoragehandler.get(friend.userName, IMService.USERNAME );
@@ -114,7 +114,7 @@ public class Messaging extends Activity {
 				
 				localstoragehandler.insert(imService.getUsername(), friend.userName, message.toString());
 							
-				messageText.setText("");
+				messageText.setText("lol");
 				Thread thread = new Thread(){					
 					public void run() {
 						try {
@@ -218,7 +218,8 @@ public class Messaging extends Activity {
 					if (message.length() > 15) {
 						message = message.substring(0, 15);
 					}
-					Toast.makeText(Messaging.this,  username + " says '"+
+					Toast.makeText(Messaging.this,  /*username +*/ " says '"+
+
 													message + "'",
 													Toast.LENGTH_SHORT).show();		
 				}

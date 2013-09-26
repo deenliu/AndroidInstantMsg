@@ -84,7 +84,7 @@ public class Login extends Activity {
 	
                
         setContentView(R.layout.login_screen);
-        setTitle("Login");
+        //setTitle("Login");
         
         Button loginButton = (Button) findViewById(R.id.login);
         cancelButton = (Button) findViewById(R.id.cancel_login);
@@ -158,14 +158,13 @@ public class Login extends Activity {
 			}       	
         });
         
-        cancelButton.setOnClickListener(new OnClickListener(){
+        /*cancelButton.setOnClickListener(new OnClickListener(){
 
 			public void onClick(View arg0) 
 			{					
 				imService.exit();
 			}
-        	
-        });
+        });*/
         
         
     }
