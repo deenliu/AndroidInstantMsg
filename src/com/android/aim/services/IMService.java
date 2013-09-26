@@ -142,8 +142,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
         // Set the icon, scrolling text and TIMESTAMP
     	String title = "AndroidIM: You got a new Message! (" + username + ")";
  				
-    	String text =  ": " + 
-     				((msg.length() < 5) ? msg : msg.substring(0, 5)+ "...");
+    	String text = ((msg.length() < 5) ? msg : msg.substring(0, 5)+ "...");
     	
     	NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
     		.setSmallIcon(R.drawable.stat_sample)
@@ -160,7 +159,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
         // Set the info for the views that show in the notification panel.
         mBuilder.setContentIntent(contentIntent); 
         
-        mBuilder.setContentText("New message from " + username + ": " + msg);
+        mBuilder.setContentText("New message from " + username);
         
         // Send the notification.
         // We use a layout id because it is a unique number.  We use it later to cancel.
@@ -219,11 +218,16 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		this.authenticatedUser = false;
 		
 		String result = this.getFriendList(context);
-		if (result != null && !result.equals(Login.AUTHENTICATION_FAILED)) 
+		if (!result.equals(Login.AUTHENTICATION_FAILED)) 
 		{			
 			// if user is authenticated then return string from server is not equal to AUTHENTICATION_FAILED
 			this.authenticatedUser = true;
-			rawFriendList = result;
+			
+			if (result == null)
+				rawFriendList = "";
+			else
+				rawFriendList = result;
+			
 			USERNAME = this.username;
 			Intent i = new Intent(FRIEND_LIST_UPDATED);					
 			i.putExtra(FriendInfo.FRIEND_LIST, rawFriendList);
@@ -251,12 +255,13 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 				i.putExtra(FriendInfo.FRIEND_LIST, tmp);
 				sendBroadcast(i);	
 				Log.i("friend list broadcast sent ", "");
+				
+				if (tmp2 != null) {
+					i2.putExtra(MessageInfo.MESSAGE_LIST, tmp2);
+					sendBroadcast(i2);	
+					Log.i("friend list broadcast sent ", "");
+				}
 			
-			if (tmp2 != null) {
-				i2.putExtra(MessageInfo.MESSAGE_LIST, tmp2);
-				sendBroadcast(i2);	
-				Log.i("friend list broadcast sent ", "");
-			}
 			}
 			else {
 				Log.i("friend list returned null", "");
@@ -282,7 +287,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 			if (activeFriend == null || activeFriend.equals(username) == false) 
 			{
 				localstoragehandler.insert(username,this.getUsername(), message.toString());
-				showNotification(username, message);
+				showNotification("*" + username, message);
 			}
 			
 			Log.i("TAKE_MESSAGE broadcast sent by im service", "");
@@ -326,7 +331,6 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 	
 	public void exit() 
 	{
-		timer.cancel();
 		socketOperator.exit(); 
 		socketOperator = null;
 		this.stopSelf();
@@ -418,7 +422,7 @@ public class IMService extends Service implements IAppManager, IUpdateData {
 		//FriendController.	
 		MessageController.setMessagesInfo(messages);
 		
-		int i = 0;
+		int i = 1;
 		while (i < messages.length){
 			messageReceived(messages[i].userid,messages[i].messagetext);
 			i++;
