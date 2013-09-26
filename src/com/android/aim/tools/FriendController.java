@@ -25,7 +25,7 @@ public class FriendController
 		FriendInfo result = null;
 		if (friendsInfo != null) 
 		{
-			for (int i = 0; i < friendsInfo.length; i++) 
+			for (int i = 1; i < friendsInfo.length; i++) 
 			{
 				if ( friendsInfo[i].userName.equals(username) && 
 					 friendsInfo[i].userKey.equals(userKey)
@@ -55,7 +55,7 @@ public class FriendController
 		FriendInfo result = null;
 		if (friendsInfo != null) 
 		{
-			for (int i = 0; i < friendsInfo.length; i++) 
+			for (int i = 1; i < friendsInfo.length; i++) 
 			{
 				if ( friendsInfo[i].userName.equals(username) )
 				{

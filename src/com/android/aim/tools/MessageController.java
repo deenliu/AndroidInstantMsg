@@ -21,7 +21,7 @@ public class MessageController
 		MessageInfo result = null;
 		if (messagesInfo != null) 
 		{
-			for (int i = 0; i < messagesInfo.length;) 
+			for (int i = 1; i < messagesInfo.length;) 
 			{
 					result = messagesInfo[i];
 					break;		
@@ -35,7 +35,7 @@ public class MessageController
 		MessageInfo result = null;
 		if (messagesInfo != null) 
 		{
-			for (int i = 0; i < messagesInfo.length;) 
+			for (int i = 1; i < messagesInfo.length;) 
 			{
 					result = messagesInfo[i];
 					break;	
