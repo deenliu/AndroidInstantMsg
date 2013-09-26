@@ -4,6 +4,11 @@ import java.util.*;
 import java.util.Calendar;
 
 public class Connector {
+	public static final String SUCCESSFUL = "1";
+	public static final String FAILED = "0";
+	public static final String SIGN_UP_USERNAME_CRASHED = "2";
+	public static final String ADD_NEW_USERNAME_NOT_FOUND = "2";
+	public static final String USER_APPROVED = "1";
 	String dburl;
 
 	// Connection to the database. Kept open between calls.
@@ -179,99 +184,147 @@ public class Connector {
 		return execute(query);
 	}
 
-	public boolean isValidLogin(String user_ID, String password){
-		user_ID = EscapeString(user_ID);
+	public String isValidLogin(String userName, String password, String ipaddr){
+		String cc=authenticateUser(userName, password, ipaddr);
+		if(cc.length()<=0)
+		{
+			return "";
+		}
+
+		userName = EscapeString(userName);
 		password = EscapeString(password);
-		String temp[] = null;
-		temp = GetUser(user_ID).split(":;:");
-		if(temp[0].equals("")) {
+		String sqlCheck = "select id from users where username = '" + userName+"' AND password = '"+password+"' limit 1;";
+		String user_ID = ResultSetToString(executeQuery(sqlCheck));
+		String sql = "select u.Id, u.username, (NOW()-u.authenticationTime) as authenticateTimeDifference, u.IP,f.providerId, f.requestId, f.status, u.port from friends f left join users u on u.Id = if ( f.providerId = "+user_ID+", f.requestId, f.providerId ) where (f.providerId = "+user_ID+" and f.status= 1 ) or f.requestId = "+user_ID+"; ";
+		
+
+		String sqlmessage = "SELECT m.id, m.fromuid, m.touid, m.sentdt, m.read, m.readdt, m.messagetext, u.username from messages m left join users u on u.Id = m.fromuid WHERE `touid` = "+user_ID+" AND `read` = 0 LIMIT 0, 30 ;";
+
+		System.out.println("output:   \n" + sql);
+		String output1 = ResultSetToString(executeQuery(sql));
+		String output2 = ResultSetToString(executeQuery(sqlmessage));
+		String out = "";
+		String friendName, status, ip, id, port;
+		out += "<data>";
+		out += "<user userKey='" +user_ID+ "' />";
+		String[] parts1 = output1.split(":;:");
+		int i = 0;
+		for(i = 0; i < parts1.length/8; i++){
+			status = "offline";			
+
+			friendName = parts1[i*8+1];
+			status = parts1[i*8+6];
+			if( !status.equals("1")){
+				status = "unApproved";
+			}else{
+				status = "offline";
+			}
+			ip = parts1[i*8+3];
+			id = parts1[i*8];
+			port = parts1[i*8+7];
+			out += "<friend  username = '"+ friendName+"'  status='"+status+"' IP='"+ip+"' userKey = '"+id+"'  port='"+port+"'/>";
+		}
+		String uName, sendt, messagetxt;
+		String[] parts2 = output2.split(":;:");
+		for(i = 0; i < parts2.length/8; i++){
+			uName = parts2[i*8+7];
+			sendt = parts2[i*8+3];
+			messagetxt = parts2[i*8+6];
+			out += "<meesage from='"+uName+ "'sendt='"+sendt+"' text='"+messagetxt+ "' />";
+		}
+		// need to update
+		System.out.println(out);
+		//String result = ResultSetToString(executeQuery(sql));
+
+		return out;
+
+	}
+
+	public boolean sendMessage(String fromUser, String password ,String message, String toUser, String ipaddr){
+		String cc=authenticateUser(fromUser, password, ipaddr);
+		if(cc.length()<=0)
+		{
 			return false;
 		}
-		String s = temp[0]+temp[1];
-		return s.equals(user_ID + password);
-	}
-	public String GetUserName(String user_ID) {
-		user_ID = EscapeString(user_ID);
-		String query = "SELECT first_name FROM user WHERE user_ID='" + user_ID + "';";
-		String result = ResultSetToString(executeQuery(query));
-		query = "SELECT last_name FROM user WHERE user_ID='" + user_ID + "';";
-		result = result +" "+ ResultSetToString(executeQuery(query));
-		return result;
+
+		String sqlto = " select Id from users where username = '" + toUser + "' limit 1 ;" ;
+		if(execute(sqlto)){
+
+			String sql22 = "INSERT INTO messages (fromuid, touid, sentdt, messagetext) VALUES ("+fromUser+",  "+toUser+", NOW(), '"+message+"');";
+//DATE("Y-m-d H:i")	
+			
+			return execute(sql22);
+
+		}
+	return false;
+
 	}
 
-	public String GetGroup(String name) {
-		name = EscapeString(name);
-		String query = "SELECT owner FROM task WHERE task_ID=" + name + ";";
+	public boolean SignUpUser(String email, String UserName, String password, String ipaddr){
+		//String cc=authenticateUser(UserName, password, ipaddr);
+		
+		String sqlCheck = "select id from users where username = '" +UserName+"' limit 1;";
+		if(execute(sqlCheck)){
+			String sql = "insert into users (username, password, email) values ('"+UserName+"','"+password+"','"+email+"');";
+			authenticateUser(UserName, password, ipaddr);
+			return execute(sql);			
+		
+	
 
-		return ResultSetToString(executeQuery(query));
-	}
+		}
 
-	public String GetRegisterID(String user_ID) {
-		user_ID = EscapeString(user_ID);
-		String query = "SELECT register_ID FROM user WHERE user_ID='" + user_ID + "';";
-		return ResultSetToString(executeQuery(query));
+		return false;
 	}
-	public String ShowFriendList(String user_ID) {
-		user_ID = EscapeString(user_ID);
-		String query = "SELECT contact_list FROM user WHERE user_ID='" + user_ID + "';";
-		return ResultSetToString(executeQuery(query));
-	}
-	public String ShowSingleInFo(String target_ID){
-		target_ID = EscapeString(target_ID);
-		String query="SELECT user_ID, first_name, last_name, phone from user where user_ID = '" + target_ID + "';";
-		return ResultSetToString(executeQuery(query));
-	}
-	public String GetGroupID(String user_ID){
-		user_ID = EscapeString(user_ID);
-		String query="SELECT group_ID from groupN where team_leader_ID='"+user_ID+"';";
-		String result="";
-		result=result+ResultSetToString(executeQuery(query))+":;:";
-		query="select group_ID from groupN where team_member_list like '%:.:"+user_ID+":.:%';";
-		result=result+ResultSetToString(executeQuery(query))+":;:";
-		return result;
-	}
-	public String GetGroupNames(String id_array){
-		String []temp=id_array.split(":.:");
-		String query="";
-		String result="";
-		for(int i=0;i<temp.length;i++){
-			query="SELECT group_title from groupN where group_ID = "+temp[i]+";";
-			String output=ResultSetToString(executeQuery(query));
-			if(i==0){
-				result=result+output;
-			}
-			else{
-				result=result+":;:"+output;
+	public boolean addNewFriend(String userName, String password , String friendUserName, String ipaddr){
+		String cc=authenticateUser(userName, password, ipaddr);
+		if(cc.length()<=0)
+		{
+			return false;
+		}
+
+		String sqlCheck = "select id from users where username = '" +userName+"' and password = '" +password+"' limit 1;";
+		if(execute(sqlCheck)){
+			String sqlCheckAg = "select id from users where username = '"+ friendUserName+ "' limit 1;";
+			if(execute(sqlCheckAg)){
+				String userID = ResultSetToString(executeQuery("select id from users where username = '" +userName+"' limit 1;"));
+				String requestID = ResultSetToString(executeQuery("select id from users where username = '" +friendUserName+"' limit 1;"));
+				
+				String sql = "insert into friends (providerID, requestId, status) values (" + userID + "," + requestID+", " + 0 +" );";
+				return execute(sql);
 			}
 		}
-		System.out.println(result);
-		return result;
+		return false;
 	}
-	public String GetGroupTaskIDs(String group_ID){
-		String query="SELECT task_ID from task where group_ID = "+group_ID+";";
-		return ResultSetToString(executeQuery(query));
-	}
-	public String GetOneGroupTasksInfo(String task_ID){
-		String query="SELECT task_ID, parent_task_ID, owner, title, content, due_time, progress, type, weight, depth, time_stamp from task where task_ID = '"+task_ID+"' ;";
-		System.out.println(query);
-		return ResultSetToString(executeQuery(query));
-	}
-	public String GetGroupLeaderAndMember(String group_ID){
-		String query="SELECT team_leader_ID from groupN where group_ID = "+group_ID+";";
-		String result="";
-		result=result+ResultSetToString(executeQuery(query));
-		System.out.println(result);
-		query="SELECT team_member_list from groupN where group_ID = "+group_ID+";";
-		String output=ResultSetToString(executeQuery(query));
-		String[] temp=output.split(":.:");
-		for(int i=0;i<temp.length;i++){
-			//System.out.println(temp[i]);
-			if(i==0) continue;
-			result=result+":;:"+temp[i];
+
+	public boolean reponseOfFriendReqs(String userName, String password, String approvedName, String discardName, String ipaddr){
+		String cc=authenticateUser(userName, password, ipaddr);
+		if(cc.length()<=0)
+		{
+			return false;
 		}
-		System.out.println(result);
-		return result;
+
+
+
+		String sqlCheck = "select id from users where username = '" +userName+"' and password = '" +password+"' limit 1;";
+		String friendUserName = "";
+		int approveORdiscard = 1;
+		String sql;
+		if(approvedName.equals("none")) { friendUserName = discardName; approveORdiscard = 0;}
+		if(discardName.equals("none")) { friendUserName = approvedName; approveORdiscard = 1;} 
+
+		if(execute(sqlCheck)){
+			String sqlCheckAg = "select id from users where username = '"+ friendUserName+ "' limit 1;";
+			if(execute(sqlCheckAg)){
+				String userID = ResultSetToString(executeQuery("select id from users where username = '" +userName+"' limit 1;"));
+				String requestID = ResultSetToString(executeQuery("select id from users where username = '" +friendUserName+"' limit 1;"));
+				sql = "update friends set status = " + approveORdiscard + " where requestID = "+userID+" AND providerId = " +requestID+";";
+				return execute(sql);			
+			}
+		}
+		return false;
 	}
+
+	
 	public boolean DeleteFriendList(String user_ID, String target){
 		user_ID = EscapeString(user_ID);
 		String query = "SELECT contact_list from user where user_ID ='"+user_ID+"';";
@@ -319,118 +372,39 @@ public class Connector {
 			return false;
 		}
 	}
-	public boolean SendMessage(String user_ID, String target, String content){
-		user_ID = EscapeString(user_ID);
-		target = EscapeString(target);
-		String query = "INSERT INTO chat_history (FROM_User_ID, TO_User_ID, timestamp, content) VALUES ('"+user_ID+"','"+
-					target + "',NOW(),'" + content + "');";
-		System.out.println("query:"+query);
 
-		return execute(query);
-	}
-	public String ReceiveMessage(String user_ID) {
-		user_ID = EscapeString(user_ID);
-		String query = "SELECT From_User_ID, To_User_ID, content, timestamp from chat_history where TO_User_ID = '" + user_ID + "' or From_User_ID= '" + user_ID + "' order by timestamp ;";
-		System.out.println("query:"+query);
+
+	public String authenticateUser(String username, String password, String ipaddr)
+	{
+		String query="select * from users where username = '" + username + "' and password = '" +password +"' limit 1;";
 		String output = ResultSetToString(executeQuery(query));
-		String temp[]=output.split(":;:");
-		String result="";
-		for(int i=0;i<temp.length;i+=4){
-			result=result+"<";
-			result=result+temp[i]+":.:"+temp[i+1]+":.:"+temp[i+2]+":.:"+temp[i+3]+">";
-		}
-		result=result.substring(1, result.length()-1);
+		//System.out.println(output);
+		String [] temp;
+		temp = output.split(":;:");
+		ipaddr=getAddr(ipaddr);
+		if(output.length()>0)
+		{
+			query="update users set authenticationTime = NOW(), IP = '"+ipaddr+"' ,port = 15145 where Id = "+temp[0]+" limit 1";		
+			if(execute(query))
+			{
+				System.out.println("Update Successfully");
+			}
+			else
+			{
+				System.out.println("failed to update");
+			}
 
-		return "[MessageHistory]:;:"+result;
-	}
-	public String ShowFriendInfo(String friendlist) {
-		System.out.println(friendlist);
-		String []temp;
-		temp = friendlist.split(":\\*:");
-		if(temp.length<1){
-			return "[ShowFriend]";
 		}
-		int i;
-		String returnString="[ShowFriend]";
-		for(i=0;i<temp.length;i++){
-			System.out.println(temp[i]);
-			String query="SELECT user_ID, first_name, last_name, phone from user where user_ID = '" + temp[i] + "';";
-			returnString=returnString+"<"+ResultSetToString(executeQuery(query))+">";	
-		}
-		return returnString;
+		return temp[0];
 	}
-	public String ShowPersonalTask(String user_ID) {
-		user_ID = EscapeString(user_ID);
-		String query = "SELECT task_ID, parent_task_ID, title, content, due_time, progress, type, weight, depth, time_stamp FROM `task` WHERE owner='" + user_ID + "';";
-		System.out.println("query:"+query);
-		String output=ResultSetToString(executeQuery(query));
-		String [] temp=output.split(":;:");
-		String result="";
-		for(int i=0;i<temp.length;i++){
-			if(i%10==0){
-				result=result+"<";
-			}
-			else{
-				result=result+":;:";
-			}
-			result=result+temp[i];
-
-			if(i%10==9){
-				result=result+">";
-			}
-		}
-		return result;
-		
+	private String getAddr(String addr)
+	{
+		//System.out.println(addr);
+		String output=addr.subSequence(1, addr.lastIndexOf(":")).toString();
+		//System.out.println("******"+addr);
+		return output;
 	}
-	public boolean AddTask(String content){
-		content=content.substring(1,content.length()-1);
-		String temp[]=content.split(":.:");
-		String inputContent="";
-		for(int i=0;i<temp.length;i++){
-			if(i!=0){
-				inputContent=inputContent+",";
-			}
-			inputContent=inputContent+temp[i];
-		}
-		String query = "INSERT INTO task (task_ID, parent_task_ID, owner, title, content, due_time, progress, type, weight, depth, time_stamp) VALUES ("+inputContent+", NOW());";
-		
-		System.out.println("query:"+query);
-
-		return execute(query);
-	}
-	public boolean AddGroupTask(String content){
-		String temp[]=content.split(":.:");
-		String inputContent="";
-		for(int i=0;i<temp.length;i++){
-			if(i!=0){
-				inputContent=inputContent+",";
-			}
-			inputContent=inputContent+temp[i];
-		}
-		//System.out.println(inputContent);
-		String query = "INSERT INTO task (task_ID, parent_task_ID, owner, title, content, due_time, progress, type, weight, depth, group_ID, time_stamp) VALUES ("+inputContent+", NOW());";
-		
-		System.out.println("query:"+query);
-		
-		return execute(query);
-	}
-	public boolean ModifyTask(String content){
-		String content1=content.substring(1,content.length()-1);
-		String temp[]=content1.split(":.:");
-		System.out.println("Modify:"+temp[0]);
-		DeleteTask(temp[0]);		
-		return AddTask(content);
-	}
-	public boolean DeleteTask(String task_id){
-		String query = "DELETE FROM task WHERE task_ID= "+task_id +" ;";
-		System.out.println(query);
-		return execute(query);
-	}
-	public boolean DeleteGroup(String group_id){
-		String query = "DELETE FROM groupN WHERE group_ID= "+group_id +" ;";
-		System.out.println(query);
-		return execute(query);
-	}
+	
 	
 	public static void main(String[] args) {
 

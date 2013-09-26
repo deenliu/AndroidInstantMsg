@@ -27,7 +27,9 @@ public class ProviderHandler implements Runnable {
 				while (!done && in.hasNextLine()) {
 					String line = in.nextLine();
 					System.out.println(line);
-					Command command = new Command(line);
+					String ipAddress = incoming.getRemoteSocketAddress().toString();
+					//System.out.println("rec: "+line+":;:"+ipAddress);
+					Command command = new Command(line+":;:"+ipAddress);
 					String output = command.getOutput();
 					System.out.println(output);
 					out.println(output);
